@@ -20,7 +20,7 @@ controlla_distro () {
 
 installa_pacchetti_ufficiali () {
 	software=(ardesia cellwriter curtain florence gdebi
-	gtk-recordmydesktop xfce4-screenshooter)
+	gtk-recordmydesktop xfce4-screenshooter vlc)
 	software1204=(gnome-mag)
 
 	for pacchetto in "${software[@]}"
@@ -55,7 +55,7 @@ installa_opensankore () {
 	zip="opensankore.zip"
 	[ "$(arch)" = 'x86_64' ] && src="http://ftp.open-sankore.org/current/Open-Sankore_Ubuntu_12.04_2.1.0_amd64.zip" || src="http://ftp.open-sankore.org/current/Open-Sankore_Ubuntu_12.04_2.1.0_i386.zip"
 	wget -c "$src" -O "$zip" || errore "(9) nello scaricamento di opensankore"
-	unzip -f "$zip" || errore "(10) nell'esplosione di OpenSankore"
+	unzip -o "$zip" || errore "(10) nell'esplosione di OpenSankore"
 	sudo gdebi --non-interactive Open-Sankore*.deb || errore "(11) nell'installazione di OpenSankore"
 }
 
@@ -74,7 +74,7 @@ installa_iprase () {
 	# diversamente procedo
 	crea_area_di_lavoro "iprase"
 	wget -c 'http://try.iprase.tn.it/prodotti/software_didattico/giochi/download/iprase_2006.zip' || errore "(14) nello scaricamento di IPRASE"
-	unzip -f iprase_2006.zip || errore "(15) nell'esplosione di IPRASE"
+	unzip -o iprase_2006.zip || errore "(15) nell'esplosione di IPRASE"
 	mkdir -p ISO || errore "(16) creazione mountpoint"
 	sudo mount -o loop,ro iprase_2006.iso ISO || errore "(17) mount dell'iso"
 	sudo cp -a ISO/ /opt/iprase || errore "(18) durante copia file IPRASE"
@@ -84,20 +84,26 @@ installa_iprase () {
 installa_java () {
 	sudo add-apt-repository -y ppa:webupd8team/java || errore "(19) configurazione PPA Java"
 	sudo apt-get update
-	sudo apt-get install oracle-java7-set-default || errore "(20) installazione JAVA"
+	sudo apt-get install -y oracle-java7-set-default || errore "(20) installazione JAVA"
 }
 
 installa_wine () {
 	sudo add-apt-repository -y ppa:ubuntu-wine:ppa || errore "(21) configurazione PPA Wine"
 	sudo apt-get update
-	sudo apt-get install wintricks wine1.7 wine-mono4.5.0 || errore "(22) installazione di Wine"
+	sudo apt-get install -y winetricks wine1.7 wine-mono4.5.0 || errore "(22) installazione di Wine"
 }
 
 installa_extras () {
 	sudo apt-get install -y lubuntu-restricted-extras ubuntu-restricted-extras || errore "(23) installazione degli extras"
 }
 
+aggiorna_installazione () {
+	sudo apt-get update || errore "(24) update dell'installazoine"
+	sudo apt-get dist-upgrade -y || errore "(25) dist-upgrade"
+}
+
 controlla_distro
+aggiorna_installazione
 installa_pacchetti_ufficiali
 installa_vox-launcher
 installa_spotlighter
