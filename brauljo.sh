@@ -49,17 +49,30 @@ installa_opensankore () {
 	zip="opensankore.zip"
 	[ "$(arch)" = 'x86_64' ] && src="http://ftp.open-sankore.org/current/Open-Sankore_Ubuntu_12.04_2.1.0_amd64.zip" || src="http://ftp.open-sankore.org/current/Open-Sankore_Ubuntu_12.04_2.1.0_i386.zip"
 	wget -c "$src" -O "$zip" || errore "(8) nello scaricamento di opensankore"
-	unzip "$zip" || errore "(9) nell'esplosione di OpenSankore"
+	unzip -f "$zip" || errore "(9) nell'esplosione di OpenSankore"
 	sudo gdebi --non-interactive Open-Sankore*.deb || errore "(10) nell'installazione di OpenSankore"
 }
 
 installa_whiteboard () {
 	# tento l'installazione dal repo
-	sudo apt-get install python-whiteboard && return
+	sudo apt-get install -y python-whiteboard && return || errore "(11) installazione Python-Whiteboard da Ubuntu"
 	# se fallisco, faccio manualmente
 	crea_area_di_lavoro "whiteboard"
-	wget -c "https://dl.dropboxusercontent.com/u/1188340/python-whiteboard%20deb%20packages/python-whiteboard_1.0.5_all.deb" || errore "(11) nello scaricamento di Python Whiteboard"
+	wget -c "https://dl.dropboxusercontent.com/u/1188340/python-whiteboard%20deb%20packages/python-whiteboard_1.0.5_all.deb" || errore "(12) nello scaricamento di Python Whiteboard"
 	sudo gdebi --non-interactive python-whiteboard*
+}
+
+installa_iprase () {
+	# controllo se l'installazione gia' esiste
+	[ -d /opt/iprase ] && return
+	# diversamente procedo
+	crea_area_di_lavoro "iprase"
+	wget -c 'http://try.iprase.tn.it/prodotti/software_didattico/giochi/download/iprase_2006.zip' || errore "(13) nello scaricamento di IPRASE"
+	unzip -f iprase_2006.zip || errore "(14) nell'esplosione di IPRASE"
+	mkdir -p ISO || errore "(15) creazione mountpoint"
+	sudo mount -o loop,ro iprase_2006.iso ISO || errore "(16) mount dell'iso"
+	sudo cp -a ISO/ /opt/iprase || errore "(17) durante copia file IPRASE"
+	sudo umount ISO
 }
 
 controlla_distro
@@ -68,7 +81,4 @@ installa_vox-launcher
 installa_spotlighter
 installa_opensankore
 installa_whiteboard
-
-# installo iprase
-#wget -c 'http://try.iprase.tn.it/prodotti/software_didattico/giochi/download/iprase_2006.zip' && unzip iprase_2006.zip && losetup /dev/loop2 iprase_2006.iso && mkdir /tmp/iprase_iso && mount /dev/loop2 /tmp/iprase_iso/ && cp -a /tmp/iprase_iso/ /opt/iprase
-
+installa_iprase
