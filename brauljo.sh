@@ -35,7 +35,7 @@ aggiorna_installazione () {
 installa_pacchetti_ufficiali () {
 	software=(ardesia cellwriter curtain florence gdebi
 	gtk-recordmydesktop xfce4-screenshooter vlc python-xlib
-	vim lubuntu-desktop)
+	vim lubuntu-desktop xcompmgr)
 	software1204=(gnome-mag)
 
 	for pacchetto in "${software[@]}"
