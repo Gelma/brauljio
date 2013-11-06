@@ -8,27 +8,25 @@ errore () {
 }
 
 controlla_distro () {
-	[ "$(lsb_release -is)" = "Ubuntu" ] || errore "brauljo funziona solo con Ubuntu"
+	[ "$(lsb_release -is)" = "Ubuntu" ] || errore "(1) brauljo funziona solo con Ubuntu"
 }
 
+installa_pacchetti_ufficiali () {
+	elenco_software=(ardesia cellwriter curtain florence gnome-mag gtk-recordmydesktop \
+	xfce4-screenshooter)
+
+	for pacchetto in "${elenco_software[@]}"
+	do
+		apt-get install -y "$package" || errore "(2) durante l'installazione di $pacchetto"
+	done
+}
 
 controlla_distro
+installa_pacchetti_ufficiali
 
 exit
 
 cd /tmp || exit
-
-for package in \
-	ardesia \
-	cellwriter \
-	curtain \
-	florence
-	gnome-mag \
-	gtk-recordmydesktop \
-	xfce4-screenshooter \
-	do
-		apt-get -y install $package
-	done
 
 # installo vox-launcher
 wget https://vox-launcher.googlecode.com/files/vox-launcher_0.1-1_all.deb && dpkg -i vox-launcher_0.1-1_all.deb && apt-get -f install -y
