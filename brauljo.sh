@@ -94,7 +94,7 @@ installa_wine () {
 }
 
 installa_extras () {
-	sudo apt-get install -y lubuntu-restricted-extras ubuntu-restricted-extras || errore "(23 installazione degli extras"
+	sudo apt-get install -y lubuntu-restricted-extras ubuntu-restricted-extras || errore "(23) installazione degli extras"
 }
 
 controlla_distro
