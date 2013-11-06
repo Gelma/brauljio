@@ -1,5 +1,7 @@
 #!/bin/bash
 
+TMP="/tmp/brauljo"
+
 errore () {
 	echo "------"
 	echo "Errore: $1"
@@ -8,7 +10,7 @@ errore () {
 }
 
 crea_area_di_lavoro () {
-	area_di_lavoro="$1"
+	area_di_lavoro="$TMP/$1"
 	mkdir -p "$area_di_lavoro" && cd "$area_di_lavoro" || errore "(3) nella creazione di $area_di_lavoro"
 }
 
@@ -28,15 +30,14 @@ installa_pacchetti_ufficiali () {
 }
 
 installa_vox-launcher () {
-	crea_area_di_lavoro "/tmp/brauljo/vox"
+	crea_area_di_lavoro "vox"
 	wget https://vox-launcher.googlecode.com/files/vox-launcher_0.1-1_all.deb || errore "(4) durante lo scaricamento di Vox-Launcher"
 	sudo gdebi --non-interactive vox-launcher_0.1-1_all.deb || errore "(5) nell'installazione di Vox Launcher"
 	sudo apt-get install python-xlib -y # necessario per risolvere dipendenza
 }
 
 installa_spotlighter () {
-	crea_area_di_lavoro "/tmp/brauljo/spotlighter"
-	echo "area $(pwd)"
+	crea_area_di_lavoro "spotlighter"
 	deb="spotlighter.deb"
 	[ "$(arch)" = 'x86_64' ] && src="http://ardesia.googlecode.com/files/spotlighter_0.3-1_amd64.deb" || src="http://ardesia.googlecode.com/files/spotlighter_0.3-1_i386.deb"
 	wget "$src" -O "$deb" || errore "(6) nello scaricamento di spotlighter"
@@ -44,7 +45,7 @@ installa_spotlighter () {
 }
 
 installa_opensankore () {
-	crea_area_di_lavoro "/tmp/brauljo/opensankore"
+	crea_area_di_lavoro "opensankore"
 	zip="opensankore.zip"
 	[ "$(arch)" = 'x86_64' ] && src="http://ftp.open-sankore.org/current/Open-Sankore_Ubuntu_12.04_2.1.0_amd64.zip" || src="http://ftp.open-sankore.org/current/Open-Sankore_Ubuntu_12.04_2.1.0_i386.zip"
 	wget "$src" -O "$zip" || errore "(8) nello scaricamento di opensankore"
