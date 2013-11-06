@@ -87,6 +87,16 @@ installa_java () {
 	sudo apt-get install oracle-java7-set-default || errore "(20) installazione JAVA"
 }
 
+installa_wine () {
+	sudo add-apt-repository -y ppa:ubuntu-wine:ppa || errore "(21) configurazione PPA Wine"
+	sudo apt-get update
+	sudo apt-get install wintricks wine1.7 wine-mono4.5.0 || errore "(22) installazione di Wine"
+}
+
+installa_extras () {
+	sudo apt-get install -y lubuntu-restricted-extras ubuntu-restricted-extras || errore "(23 installazione degli extras"
+}
+
 controlla_distro
 installa_pacchetti_ufficiali
 installa_vox-launcher
@@ -95,3 +105,5 @@ installa_opensankore
 installa_whiteboard
 installa_iprase
 installa_java
+installa_wine
+installa_extras
