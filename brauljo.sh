@@ -81,6 +81,12 @@ installa_iprase () {
 	sudo umount ISO
 }
 
+installa_java () {
+	sudo add-apt-repository -y ppa:webupd8team/java || errore "(19) configurazione PPA Java"
+	sudo apt-get update
+	sudo apt-get install oracle-java7-set-default || errore "(20) installazione JAVA"
+}
+
 controlla_distro
 installa_pacchetti_ufficiali
 installa_vox-launcher
@@ -88,3 +94,4 @@ installa_spotlighter
 installa_opensankore
 installa_whiteboard
 installa_iprase
+installa_java
