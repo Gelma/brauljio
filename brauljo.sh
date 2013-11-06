@@ -1,7 +1,8 @@
 #!/bin/bash
 
 TMP="/tmp/brauljo"
-CACHE="($dirname $0)/cache"
+CACHE="$(readlink -e $0)"
+CACHE="$(dirname "$CACHE")/cache"
 
 errore () {
 	echo "------"
@@ -26,14 +27,15 @@ configura_repository_esterni () {
 
 aggiorna_installazione () {
 	# creo link cache locale
-	[ -d "$CACHE/lubuntu_deb" ] && ln -s "$CACHE/lubuntu_deb/*deb" /var/cache/apt/archives/
+	[ -d "$CACHE/lubuntu_deb" ] && ln -s $CACHE/lubuntu_deb/*deb /var/cache/apt/archives/ || echo exit 
 	sudo apt-get update || errore "(24) update dell'installazoine"
 	sudo apt-get dist-upgrade -y || errore "(25) dist-upgrade"
 }
 
 installa_pacchetti_ufficiali () {
 	software=(ardesia cellwriter curtain florence gdebi
-	gtk-recordmydesktop xfce4-screenshooter vlc python-xlib)
+	gtk-recordmydesktop xfce4-screenshooter vlc python-xlib
+	vim lubuntu-desktop)
 	software1204=(gnome-mag)
 
 	for pacchetto in "${software[@]}"
@@ -50,8 +52,13 @@ installa_pacchetti_ufficiali () {
 
 installa_vox-launcher () {
 	crea_area_di_lavoro "vox"
-	wget -c https://vox-launcher.googlecode.com/files/vox-launcher_0.1-1_all.deb || errore "(5) durante lo scaricamento di Vox-Launcher"
-	sudo gdebi --non-interactive vox-launcher_0.1-1_all.deb || errore "(6) nell'installazione di Vox Launcher"
+	deb="vox-launcher_0.1-1_all.deb"
+	if [ ! -e "$CACHE/$deb" ] ; then
+		wget -c https://vox-launcher.googlecode.com/files/vox-launcher_0.1-1_all.deb || errore "(5) durante lo scaricamento di Vox-Launcher"
+	else
+		ln -s "$CACHE/$deb" . || errore "(27) creazione link vox launcher"
+	fi
+	sudo gdebi --non-interactive $deb || errore "(6) nell'installazione di Vox Launcher"
 	# python-xlib necessario per risolvere dipendenza, segnalare bug al manutentore
 }
 
@@ -104,9 +111,9 @@ installa_iprase () {
 
 installa_java () {
 	# controllo cache
-	if [ -d "$CACHE/oracle-jdk7-installer" ] && [ ! -d "/var/cache/oracle-jdk7-installer"] ; then
+	if [ -d "$CACHE/oracle-jdk7-installer" ] ; then
 		mkdir -p /var/cache/oracle-jdk7-installer/ || errore "(26) crezione cache Java"
-		ln -s "$CACHE/oracle-jdk7-installer/*tar.gz" "/var/cache/oracle-jdk7-installer/"
+		ln -s -f $CACHE/oracle-jdk7-installer/*tar.gz /var/cache/oracle-jdk7-installer/ || errore "(27) creazione link cache Java"
 	fi
 	sudo apt-get install -y oracle-java7-set-default || errore "(20) installazione JAVA"
 }
