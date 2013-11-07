@@ -39,7 +39,7 @@ aggiorna_installazione () {
 }
 
 installa_pacchetti_ufficiali () {
-	for pacchetto in $(cat "$BASE/pacchetti_$ubuntu_release.txt")
+	for pacchetto in $(cat "$BASE/installa_$ubuntu_release.txt")
 	do
 		sudo apt-get install -y "$pacchetto" || errore "(2) durante l'installazione del pacchetto $pacchetto"
 	done
@@ -132,10 +132,11 @@ installa_chrome () {
 	sudo gdebi --non-interactive "$deb" || errore "(29) nell'installazione di OpenSankore"
 }
 
-rimuovi_pacchetti () {
-	# rimuovo per evitare inutile i/o
-	sudo dpkg --purge mlocate apt-xapian-index
-}
+disinstalla_pacchetti_ufficiali () {
+	for pacchetto in $(cat "$BASE/disinstalla_$ubuntu_release.txt")
+	do
+		sudo apt-get remove -y "$pacchetto" || errore "(30) durante l'installazione del pacchetto $pacchetto"
+	done
 
 controlla_distro
 configura_repository_esterni
@@ -150,4 +151,4 @@ installa_java
 installa_wine
 installa_extras
 installa_chrome
-rimuovi_pacchetti
+disinstalla_pacchetti_ufficiali
