@@ -1,8 +1,9 @@
 #!/bin/bash
 
 TMP="/tmp/brauljo"
-CACHE="$(readlink -e $0)"
-CACHE="$(dirname "$CACHE")/cache"
+BASE="$(readlink -e $0)"
+CACHE="$(dirname "$BASE")/cache"
+ubuntu_release=$(lsb_release -rs)
 
 errore () {
 	echo "------"
@@ -33,22 +34,10 @@ aggiorna_installazione () {
 }
 
 installa_pacchetti_ufficiali () {
-	software=(ardesia cellwriter curtain florence gdebi
-	gtk-recordmydesktop xfce4-screenshooter vlc python-xlib
-	vim lubuntu-desktop xcompmgr)
-	software1204=(gnome-mag)
-
-	for pacchetto in "${software[@]}"
+	for pacchetto in $(cat "$BASE/pacchetti_$ubuntu_release.txt")
 	do
-		sudo apt-get install -y "$pacchetto" || errore "(2) durante l'installazione di $pacchetto"
+		sudo apt-get install -y "$pacchetto" || errore "(2) durante l'installazione del pacchetto $pacchetto"
 	done
-
-	[ $(lsb_release -rs) = "12.04" ] && \
-		for pacchetto in "${software1204[@]}"
-		do
-			sudo apt-get install -y "$pacchetto" || errore "(4) durante l'installazione di $pacchetto"
-		done
-}
 
 installa_vox-launcher () {
 	crea_area_di_lavoro "vox"
