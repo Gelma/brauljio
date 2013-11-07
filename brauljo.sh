@@ -120,6 +120,18 @@ installa_extras () {
 	sudo apt-get install -y lubuntu-restricted-extras ubuntu-restricted-extras || errore "(23) installazione degli extras"
 }
 
+installa_chrome () {
+	crea_area_di_lavoro "chrome"
+	deb="chrome.deb"
+	[ "$(arch)" = 'x86_64' ] && src="google-chrome-stable_current_amd64.deb" || src="google-chrome-stable_current_i386.deb"
+	if [ ! -e "$CACHE/$src" ] ; then
+		wget -c "https://dl.google.com/linux/direct/$src" -O "$deb" || errore "(28) nello scaricamento di Google Chrome"
+	else
+		ln -s "$CACHE/$src" "$deb"
+	fi
+	sudo gdebi --non-interactive "$deb" || errore "(29) nell'installazione di OpenSankore"
+}
+
 controlla_distro
 configura_repository_esterni
 aggiorna_installazione
@@ -132,3 +144,4 @@ installa_iprase
 installa_java
 installa_wine
 installa_extras
+installa_chrome
