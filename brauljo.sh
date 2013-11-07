@@ -132,6 +132,11 @@ installa_chrome () {
 	sudo gdebi --non-interactive "$deb" || errore "(29) nell'installazione di OpenSankore"
 }
 
+rimuovi_pacchetti () {
+	# rimuovo per evitare inutile i/o
+	sudo dpkg --purge mlocate apt-xapian-index
+}
+
 controlla_distro
 configura_repository_esterni
 aggiorna_installazione
@@ -145,3 +150,4 @@ installa_java
 installa_wine
 installa_extras
 installa_chrome
+rimuovi_pacchetti
