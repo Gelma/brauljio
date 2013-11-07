@@ -22,8 +22,13 @@ controlla_distro () {
 }
 
 configura_repository_esterni () {
-	sudo add-apt-repository -y ppa:webupd8team/java || errore "(19) configurazione PPA Java"
-	sudo add-apt-repository -y ppa:ubuntu-wine:ppa || errore "(21) configurazione PPA Wine"
+	if [ -e "/etc/apt/sources.list.d/webupd8team-java-saucy.list" ] ; then
+		sudo add-apt-repository -y ppa:webupd8team/java || errore "(19) configurazione PPA Java"
+	fi
+	
+	if [ -e "/etc/apt/sources.list.d/ubuntu-wine-ppa-saucy.list" ] ; then
+		sudo add-apt-repository -y ppa:ubuntu-wine:ppa || errore "(21) configurazione PPA Wine"
+	fi
 }
 
 aggiorna_installazione () {
