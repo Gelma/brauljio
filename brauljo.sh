@@ -129,7 +129,7 @@ installa_chrome () {
 	else
 		ln -s "$CACHE/$src" "$deb"
 	fi
-	sudo gdebi --non-interactive "$deb" || errore "(29) nell'installazione di OpenSankore"
+	sudo gdebi --non-interactive "$deb" || errore "(29) nell'installazione di Google Chrome"
 }
 
 disinstalla_pacchetti_ufficiali () {
@@ -137,6 +137,7 @@ disinstalla_pacchetti_ufficiali () {
 	do
 		sudo apt-get remove -y "$pacchetto" || errore "(30) durante l'installazione del pacchetto $pacchetto"
 	done
+}
 
 controlla_distro
 configura_repository_esterni
