@@ -15,6 +15,7 @@ errore () {
 
 crea_area_di_lavoro () {
 	area_di_lavoro="$TMP/$1"
+	rm -rf "$area_di_lavoro"
 	mkdir -p "$area_di_lavoro" && cd "$area_di_lavoro" || errore "(3) nella creazione di $area_di_lavoro"
 }
 
@@ -159,6 +160,17 @@ installa_qcad () {
 	mv -f "$src" /opt/qcad
 }
 
+installa_draftsight () {
+	crea_area_di_lavoro "draft"
+	deb="draftSight.deb"
+	if [ ! -e "$CACHE/$deb" ] ; then
+		wget -c "http://www.draftsight.com/download-linux-ubuntu" -O "$deb" || errore "(33) nello scaricamento di DraftSight"
+	else
+		ln -s "$CACHE/$deb" "$deb"
+	fi
+	sudo gdebi --non-interactive "$deb" || errore "(34) nell'installazione di DraftSight"
+}
+
 disinstalla_pacchetti_ufficiali () {
 	for pacchetto in $(cat "$BASE/disinstalla_$ubuntu_release.txt")
 	do
@@ -180,4 +192,5 @@ installa_wine
 installa_extras
 installa_chrome
 installa_qcad
+installa_draftsight
 disinstalla_pacchetti_ufficiali
