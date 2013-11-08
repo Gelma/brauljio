@@ -95,3 +95,4 @@ vlc
 wxmaxima
 xcompmgr
 xfce4-screenshooter
+x11-touchscreen-calibrator
