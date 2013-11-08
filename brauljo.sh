@@ -2,7 +2,7 @@
 
 TMP="/tmp/brauljo"
 SCRIPT="$(readlink -e $0)"
-BASE="$(dirname "$BASE")"
+BASE="$(dirname "$SCRIPT")"
 CACHE="$BASE/cache"
 ubuntu_release=$(lsb_release -rs)
 
