@@ -1,8 +1,9 @@
 #!/bin/bash
 
 TMP="/tmp/brauljo"
-BASE="$(readlink -e $0)"
-CACHE="$(dirname "$BASE")/cache"
+SCRIPT="$(readlink -e $0)"
+BASE="$(dirname "$BASE")"
+CACHE="$BASE/cache"
 ubuntu_release=$(lsb_release -rs)
 
 errore () {
@@ -33,9 +34,12 @@ configura_repository_esterni () {
 
 aggiorna_installazione () {
 	# creo link cache locale
-	[ -d "$CACHE/lubuntu_deb" ] && ln -s $CACHE/lubuntu_deb/*deb /var/cache/apt/archives/ || echo exit 
+	if [ -d "$CACHE/lubuntu_deb" ] ; then
+		sudo ln -s -f $CACHE/lubuntu_deb/*deb /var/cache/apt/archives/ || errore "(31) creazione cache pacchetti"
+	fi
 	sudo apt-get update || errore "(24) update dell'installazoine"
 	sudo apt-get dist-upgrade -y || errore "(25) dist-upgrade"
+	# Todo: aggiungere copia in cache locale
 }
 
 installa_pacchetti_ufficiali () {
@@ -43,6 +47,7 @@ installa_pacchetti_ufficiali () {
 	do
 		sudo apt-get install -y "$pacchetto" || errore "(2) durante l'installazione del pacchetto $pacchetto"
 	done
+}
 
 installa_vox-launcher () {
 	crea_area_di_lavoro "vox"
@@ -57,6 +62,8 @@ installa_vox-launcher () {
 }
 
 installa_spotlighter () {
+	# è gia' presente nella distro. Lo lascio per support futuro.
+	return
 	crea_area_di_lavoro "spotlighter"
 	deb="spotlighter.deb"
 	[ "$(arch)" = 'x86_64' ] && src="http://ardesia.googlecode.com/files/spotlighter_0.3-1_amd64.deb" || src="http://ardesia.googlecode.com/files/spotlighter_0.3-1_i386.deb"
@@ -106,8 +113,8 @@ installa_iprase () {
 installa_java () {
 	# controllo cache
 	if [ -d "$CACHE/oracle-jdk7-installer" ] ; then
-		mkdir -p /var/cache/oracle-jdk7-installer/ || errore "(26) crezione cache Java"
-		ln -s -f $CACHE/oracle-jdk7-installer/*tar.gz /var/cache/oracle-jdk7-installer/ || errore "(27) creazione link cache Java"
+		sudo mkdir -p /var/cache/oracle-jdk7-installer/ || errore "(26) crezione cache Java"
+		sudo ln -s -f $CACHE/oracle-jdk7-installer/*tar.gz /var/cache/oracle-jdk7-installer/ || errore "(27) creazione link cache Java"
 	fi
 	sudo apt-get install -y oracle-java7-set-default || errore "(20) installazione JAVA"
 }

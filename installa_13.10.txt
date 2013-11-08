@@ -87,6 +87,7 @@ scratch
 scribus
 scribus-doc
 scribus-template
+spotlighter
 stellarium
 stellarium-data
 tuxmath
