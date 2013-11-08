@@ -72,6 +72,9 @@ installa_spotlighter () {
 }
 
 installa_opensankore () {
+	# controllo se l'installazione gia' esiste
+	[ -d /usr/local/Open-Sankore-2.1.0 ] && return
+	# diversamente procedo
 	crea_area_di_lavoro "opensankore"
 	zip="opensankore.zip"
 	[ "$(arch)" = 'x86_64' ] && src="Open-Sankore_Ubuntu_12.04_2.1.0_amd64.zip" || src="Open-Sankore_Ubuntu_12.04_2.1.0_i386.zip"
