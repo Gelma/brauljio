@@ -90,6 +90,7 @@ scribus-template
 spotlighter
 stellarium
 stellarium-data
+step
 tuxmath
 vim
 vlc
